@@ -66,10 +66,8 @@ handleChangeFile = (e) => {
       status: 'pending'
     }
     this.updateBill(bill)
-    this.onNavigate(ROUTES_PATH['Bills'])
   }
 
-  // not need to cover this function by tests
   updateBill = (bill) => {
     if (this.store) {
       this.store
@@ -78,7 +76,12 @@ handleChangeFile = (e) => {
         .then(() => {
           this.onNavigate(ROUTES_PATH['Bills'])
         })
-        .catch(error => console.error(error))
+        .catch(error => {
+          console.error(error)
+          if (error.response && error.response.status === 400) {
+            alert("Erreur lors de l'envoi de la note de frais.")
+          }
+        })
     }
   }
 }

@@ -106,6 +106,30 @@ describe("NewBill", () => {
     expect(updateMock).toHaveBeenCalled()
   })
 
+  test("should alert when update returns 400", async () => {
+    component.fileUrl = "url"
+    component.fileName = "test.png"
+    component.billId = "123"
+
+    updateMock.mockRejectedValue({
+      response: {
+        status: 400
+      }
+    })
+
+    const form = screen.getByTestId("form-new-bill")
+
+    form.dispatchEvent(new Event("submit"))
+
+    await new Promise(setImmediate)
+
+    expect(updateMock).toHaveBeenCalled()
+
+    expect(global.alert).toHaveBeenCalledWith(
+      "Erreur lors de l'envoi de la note de frais."
+    )
+  })
+
   test("integration POST new bill", async () => {
     const input = screen.getByTestId("file")
 
